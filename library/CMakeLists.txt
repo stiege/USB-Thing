@@ -12,12 +12,18 @@ set(CMAKE_CXX_FLAGS "-std=gnu++11 -g")
 include_directories(${PROJECT_SOURCE_DIR}/../common/include)
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
+find_package(PkgConfig)
+pkg_check_modules(LIBUSB libusb-1.0)
+
+link_directories(${LIBUSB_LIBRARY_DIRS})
+include_directories(${LIBUSB_INCLUDE_DIRS}/..)
+
 set(USBTHING_SOURCES
 	${CMAKE_CURRENT_LIST_DIR}/source/usbthing.c)
 
 # Add libraries
 add_library(usbthing SHARED ${USBTHING_SOURCES})
-target_link_libraries(usbthing usb-1.0)
+target_link_libraries(usbthing ${LIBUSB_LIBRARIES})
 
 install(TARGETS usbthing LIBRARY DESTINATION lib)
 install(DIRECTORY include/ DESTINATION include/usbthing)
